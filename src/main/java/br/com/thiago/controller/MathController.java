@@ -1,9 +1,12 @@
-package br.com.thiago;
+package br.com.thiago.controller;
 
+import br.com.thiago.converter.ConverterToNumber;
 import br.com.thiago.exceptions.UnsupportedMathOperationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.atomic.AtomicLong;
+
+import static br.com.thiago.converter.ConverterToNumber.isNumeric;
 
 @RestController
 public class MathController {
@@ -17,11 +20,7 @@ public class MathController {
             throw new UnsupportedMathOperationException("Por favor setar um valor numérico!");
         }
 
-        // BR 10,25 US 10.25
-        String numero1 = n1.replaceAll(",", ".");
-        String numero2 = n2.replaceAll(",", ".");
-
-        Double resultado = Double.parseDouble(numero1) + Double.parseDouble(numero2);
+        Double resultado = ConverterToNumber.convertToDouble(n1) + ConverterToNumber.convertToDouble(n2);
 
         return resultado;
     }
@@ -32,11 +31,8 @@ public class MathController {
             throw new UnsupportedMathOperationException("Por favor setar um valor numérico!");
         }
 
-        String numero1 = n1.replaceAll(",", ".");
-        String numero2 = n2.replaceAll(",", ".");
-
         Double resultado;
-        return resultado = Double.parseDouble(numero1) - Double.parseDouble(numero2);
+        return resultado = ConverterToNumber.convertToDouble(n1) - ConverterToNumber.convertToDouble(n2);
     }
 
     @GetMapping("/multiplicacao/{n1}/{n2}")
@@ -45,11 +41,8 @@ public class MathController {
             throw new UnsupportedMathOperationException("Por favor setar um valor numérico!");
         }
 
-        String numero1 = n1.replaceAll(",", ".");
-        String numero2 = n2.replaceAll(",", ".");
-
         Double resultado;
-        return resultado = Double.parseDouble(numero1) * Double.parseDouble(numero2);
+        return resultado = ConverterToNumber.convertToDouble(n1) * Double.parseDouble(n2);
     }
 
     @GetMapping("/dividir/{n1}/{n2}")
@@ -58,11 +51,8 @@ public class MathController {
             throw new UnsupportedMathOperationException("Por favor setar um valor numérico!");
         }
 
-        String numero1 = n1.replaceAll(",", ".");
-        String numero2 = n2.replaceAll(",", ".");
-
         Double resultado;
-        return resultado = Double.parseDouble(numero1) / Double.parseDouble(numero2);
+        return resultado = ConverterToNumber.convertToDouble(n1) / ConverterToNumber.convertToDouble(n2);
     }
 
     @GetMapping("/media/{n1}/{n2}")
@@ -71,10 +61,7 @@ public class MathController {
             throw new UnsupportedMathOperationException("Por favor setar um valor numérico!");
         }
 
-        String numero1 = n1.replaceAll(",", ".");
-        String numero2 = n2.replaceAll(",", ".");
-
-        Double resultado = Double.parseDouble(numero1) + Double.parseDouble(numero2);
+        Double resultado = ConverterToNumber.convertToDouble(n1) + ConverterToNumber.convertToDouble(n2);
 
         return resultado / 2;
     }
@@ -87,20 +74,10 @@ public class MathController {
 
         String numero1 = n1.replaceAll(",", ".");
 
-        Double numeroConvertido = Double.parseDouble(numero1);
+        Double numeroConvertido = ConverterToNumber.convertToDouble(n1);
 
         return Math.sqrt(numeroConvertido);
     }
 
-    private boolean isNumeric(String str) {
 
-        if (str == null) {
-            return false;
-        }
-
-        String numero = str.replaceAll(",", ".");
-
-        return numero.matches("[-+]?[0-9]*\\.?[0-9]+");
-
-    }
 }
