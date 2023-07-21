@@ -14,9 +14,11 @@ public class PersonServices {
     // para simular id
     private final AtomicLong counter = new AtomicLong();
 
+    // mostrar no console
     private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
     public Person findById(String id) {
+        //mostra no console
         logger.info("Buscando uma pessoa");
 
         Person person = new Person();
@@ -32,6 +34,7 @@ public class PersonServices {
     }
 
     public List<Person> findAll() {
+        //mostra no console
         logger.info("Buscando uma pessoa - findAll");
         List<Person> personList = new ArrayList<>();
 
@@ -41,6 +44,29 @@ public class PersonServices {
             personList.add(person);
         }
         return personList;
+    }
+
+    public Person create(Person person) {
+        //mostra no console
+        logger.info("Cria uma Person");
+
+        //Mock:
+
+        return person;
+    }
+
+    public Person update(Person person) {
+        //mostra no console
+        logger.info("Cria uma Person");
+
+        //Mock:
+
+        return person;
+    }
+
+    public void delete(String id) {
+        //mostra no console
+        logger.info("Cria uma Person");
     }
 
     private Person mockPerson(int i) {
@@ -54,5 +80,4 @@ public class PersonServices {
 
         return person;
     }
-
 }
