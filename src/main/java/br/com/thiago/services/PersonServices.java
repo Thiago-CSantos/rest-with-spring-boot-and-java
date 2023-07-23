@@ -1,83 +1,64 @@
 package br.com.thiago.services;
 
 import br.com.thiago.model.Person;
+import br.com.thiago.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.logging.Logger;
 
 @Service
 public class PersonServices {
 
-    // para simular id
-    private final AtomicLong counter = new AtomicLong();
+    @Autowired
+    private PersonRepository repository;
+
 
     // mostrar no console
     private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
-    public Person findById(String id) {
+    public Person findById(Long id) {
         //mostra no console
         logger.info("Buscando uma pessoa");
 
-        Person person = new Person();
+        return repository.findById(id).orElseThrow();
 
-        // Mock:
-        person.setId(counter.incrementAndGet());
-        person.setFirstName("Thiago");
-        person.setLastName("Carretero");
-        person.setAddress("Santo Antônio do Jardim");
-        person.setGender("Masculino");
-
-        return person;
     }
 
     public List<Person> findAll() {
         //mostra no console
         logger.info("Buscando uma pessoa - findAll");
-        List<Person> personList = new ArrayList<>();
-
-        // Mock: de 7 Person
-        for (int i = 0; i < 8; i++) {
-            Person person = mockPerson(i);
-            personList.add(person);
-        }
-        return personList;
+        return repository.findAll();
     }
 
     public Person create(Person person) {
         //mostra no console
         logger.info("Cria uma Person");
 
-        //Mock:
-
-        return person;
+        return repository.save(person);
     }
 
     public Person update(Person person) {
         //mostra no console
-        logger.info("Cria uma Person");
+        logger.info("Atualiza uma Person");
 
-        //Mock:
+        Person entity = repository.findById(person.getId()).orElseThrow();
 
-        return person;
+        entity.setFirstName(person.getFirstName());
+        entity.setLastName(person.getLastName());
+        entity.setAddress(person.getAddress());
+        entity.setGender(person.getGender());
+
+        return repository.save(entity);
     }
 
-    public void delete(String id) {
+    public void delete(Long id) {
         //mostra no console
-        logger.info("Cria uma Person");
+        logger.info("deleta uma Person");
+        Person entity = repository.findById(id).orElseThrow();
+
+        repository.delete(entity);
     }
 
-    private Person mockPerson(int i) {
-        // Mock:
-        Person person = new Person();
-        person.setId(counter.incrementAndGet());
-        person.setFirstName("Nome " + i);
-        person.setLastName("Sobrenome " + i);
-        person.setAddress("Brasil - " + i);
-        person.setGender("Masculino" + i);
-
-        return person;
-    }
 }
