@@ -1,7 +1,9 @@
 package br.com.thiago.services;
 
+import br.com.thiago.mapper.DozerMapper;
 import br.com.thiago.model.Person;
 import br.com.thiago.repository.PersonRepository;
+import br.com.thiago.vo.v1.PersonVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,28 +20,34 @@ public class PersonServices {
     // mostrar no console
     private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
-    public Person findById(Long id) {
+    public PersonVo findById(Long id) {
         //mostra no console
         logger.info("Buscando uma pessoa");
 
-        return repository.findById(id).orElseThrow();
+        var entity = repository.findById(id);
+
+        return DozerMapper.parseObject(entity, PersonVo.class);
 
     }
 
-    public List<Person> findAll() {
+    public List<PersonVo> findAll() {
         //mostra no console
         logger.info("Buscando uma pessoa - findAll");
-        return repository.findAll();
+        return DozerMapper.parseListObject(repository.findAll(), PersonVo.class);
     }
 
-    public Person create(Person person) {
+    public PersonVo create(PersonVo person) {
         //mostra no console
         logger.info("Cria uma Person");
 
-        return repository.save(person);
+        var entity = DozerMapper.parseObject(person, Person.class);
+
+        var vo = DozerMapper.parseObject(repository.save(entity), PersonVo.class);
+
+        return vo;
     }
 
-    public Person update(Person person) {
+    public PersonVo update(PersonVo person) {
         //mostra no console
         logger.info("Atualiza uma Person");
 
@@ -50,13 +58,15 @@ public class PersonServices {
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
 
-        return repository.save(entity);
+        var vo = DozerMapper.parseObject(repository.save(entity), PersonVo.class);
+
+        return vo;
     }
 
     public void delete(Long id) {
         //mostra no console
         logger.info("deleta uma Person");
-        Person entity = repository.findById(id).orElseThrow();
+        var entity = repository.findById(id).orElseThrow();
 
         repository.delete(entity);
     }

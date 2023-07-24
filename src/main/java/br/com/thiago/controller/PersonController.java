@@ -1,9 +1,8 @@
 package br.com.thiago.controller;
 
-import br.com.thiago.model.Person;
 import br.com.thiago.services.PersonServices;
+import br.com.thiago.vo.v1.PersonVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,22 +18,22 @@ public class PersonController {
     //private PersonServices services = new PersonServices();
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person findById(@PathVariable(value = "id") Long id) {
+    public PersonVo findById(@PathVariable(value = "id") Long id) {
         return services.findById(id);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Person> people() {
+    public List<PersonVo> people() {
         return services.findAll();
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person create(@RequestBody Person person) {
+    public PersonVo create(@RequestBody PersonVo person) {
         return services.create(person);
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person update(@RequestBody Person person) {
+    public PersonVo update(@RequestBody PersonVo person) {
         return services.update(person);
     }
 
