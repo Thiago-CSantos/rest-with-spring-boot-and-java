@@ -1,9 +1,10 @@
 package br.com.thiago.services;
 
-import br.com.thiago.mapper.DozerMapper;
+import br.com.thiago.dto.PersonVo;
+import br.com.thiago.dto.PersonVoResponse;
 import br.com.thiago.model.Person;
 import br.com.thiago.repository.PersonRepository;
-import br.com.thiago.vo.v1.PersonVo;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,47 +21,63 @@ public class PersonServices {
     // mostrar no console
     private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
-    public PersonVo findById(Long id) {
+    public PersonVoResponse findById(Long id) {
         //mostra no console
         logger.info("Buscando uma pessoa");
 
         var entity = repository.findById(id);
 
-        return DozerMapper.parseObject(entity, PersonVo.class);
+        // verifica se a entitidade existe
+        if(entity.isPresent()){
+            PersonVoResponse personVo = new PersonVoResponse();
+
+            BeanUtils.copyProperties(personVo, entity);
+            return personVo;
+        }
+
+        return null;
 
     }
 
     public List<PersonVo> findAll() {
         //mostra no console
         logger.info("Buscando uma pessoa - findAll");
-        return DozerMapper.parseListObject(repository.findAll(), PersonVo.class);
+        List<PersonVo> personVoList = repository.findAll().stream().map((Person p) -> new PersonVo(
+                p.getId(),
+                p.getFirstName(),
+                p.getLastName(),
+                p.getAddress(),
+                p.getGender())
+        ).toList();
+        // ou List<PersonVo> personVoList = repository.findAll().stream().map(PersonVo::new).toList();
+        return personVoList;
     }
 
-    public PersonVo create(PersonVo person) {
+    public Person create(PersonVo personVo) {
         //mostra no console
         logger.info("Cria uma Person");
 
-        var entity = DozerMapper.parseObject(person, Person.class);
+        Person person = new Person();
+        // Converte o personVo para person
+        BeanUtils.copyProperties(personVo, person);
 
-        var vo = DozerMapper.parseObject(repository.save(entity), PersonVo.class);
+        return repository.save(person);
 
-        return vo;
+
     }
 
-    public PersonVo update(PersonVo person) {
+    public Person update(PersonVo person) {
         //mostra no console
         logger.info("Atualiza uma Person");
 
-        Person entity = repository.findById(person.getId()).orElseThrow();
+        Person entity = repository.findById(person.id()).orElseThrow();
 
-        entity.setFirstName(person.getFirstName());
-        entity.setLastName(person.getLastName());
-        entity.setAddress(person.getAddress());
-        entity.setGender(person.getGender());
+        entity.setFirstName(person.firstName());
+        entity.setLastName(person.lastName());
+        entity.setAddress(person.address());
+        entity.setGender(person.gender());
 
-        var vo = DozerMapper.parseObject(repository.save(entity), PersonVo.class);
-
-        return vo;
+        return repository.save(entity);
     }
 
     public void delete(Long id) {
