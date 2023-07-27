@@ -1,6 +1,5 @@
 package br.com.thiago.controller;
 
-import br.com.thiago.dto.PersonVoResponse;
 import br.com.thiago.model.Person;
 import br.com.thiago.services.PersonServices;
 import br.com.thiago.dto.PersonVo;
@@ -21,7 +20,7 @@ public class PersonController {
     //private PersonServices services = new PersonServices();
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PersonVoResponse> findById(@PathVariable(value = "id") Long id) {
+    public ResponseEntity<PersonVo> findById(@PathVariable(value = "id") Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(services.findById(id));
     }
 

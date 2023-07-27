@@ -1,7 +1,6 @@
 package br.com.thiago.services;
 
 import br.com.thiago.dto.PersonVo;
-import br.com.thiago.dto.PersonVoResponse;
 import br.com.thiago.model.Person;
 import br.com.thiago.repository.PersonRepository;
 import org.springframework.beans.BeanUtils;
@@ -21,21 +20,16 @@ public class PersonServices {
     // mostrar no console
     private Logger logger = Logger.getLogger(PersonServices.class.getName());
 
-    public PersonVoResponse findById(Long id) {
+    public PersonVo findById(Long id) {
         //mostra no console
         logger.info("Buscando uma pessoa");
 
-        var entity = repository.findById(id);
+        Person entity = repository.findById(id).orElseThrow(() -> new RuntimeException("NÃO ENCONTRADO"));
 
-        // verifica se a entitidade existe
-        if(entity.isPresent()){
-            PersonVoResponse personVo = new PersonVoResponse();
+            PersonVo personVo = new PersonVo(entity);
 
             BeanUtils.copyProperties(personVo, entity);
             return personVo;
-        }
-
-        return null;
 
     }
 
