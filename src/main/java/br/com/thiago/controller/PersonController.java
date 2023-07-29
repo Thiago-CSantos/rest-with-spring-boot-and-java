@@ -35,7 +35,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.CREATED).body(services.create(person));
     }
 
-    @PutMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @PutMapping
     public ResponseEntity<Person> update(@RequestBody PersonVo person) {
         return ResponseEntity.status(HttpStatus.OK).body(services.update(person));
     }

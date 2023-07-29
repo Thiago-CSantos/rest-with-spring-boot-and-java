@@ -13,6 +13,9 @@ public class PersonVo extends RepresentationModel<PersonVo> {
     private String address;
     private String gender;
 
+    public PersonVo(){
+    }
+
     public PersonVo(Long id_chave, String firstName, String lastName, String address, String gender) {
         this.id_chave = id_chave;
         this.firstName = firstName;

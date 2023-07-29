@@ -50,6 +50,11 @@ public class PersonServices {
                 p.getGender())
         ).toList();
         // ou List<PersonVo> personVoList = repository.findAll().stream().map(PersonVo::new).toList();
+
+        for (PersonVo p : personVoList) {
+            p.add(linkTo(methodOn(PersonController.class).findById(p.getId_chave())).withSelfRel());
+        }
+
         return personVoList;
     }
 
@@ -62,8 +67,6 @@ public class PersonServices {
         BeanUtils.copyProperties(personVo, person);
 
         return repository.save(person);
-
-
     }
 
     public Person update(PersonVo person) {
