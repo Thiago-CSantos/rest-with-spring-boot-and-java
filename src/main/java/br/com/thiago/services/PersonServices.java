@@ -1,5 +1,6 @@
 package br.com.thiago.services;
 
+import br.com.thiago.controller.PersonController;
 import br.com.thiago.dto.PersonVo;
 import br.com.thiago.model.Person;
 import br.com.thiago.repository.PersonRepository;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.logging.Logger;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class PersonServices {
@@ -26,10 +30,12 @@ public class PersonServices {
 
         Person entity = repository.findById(id).orElseThrow(() -> new RuntimeException("NÃO ENCONTRADO"));
 
-            PersonVo personVo = new PersonVo(entity);
+        PersonVo personVo = new PersonVo(entity);
 
-            BeanUtils.copyProperties(personVo, entity);
-            return personVo;
+        BeanUtils.copyProperties(personVo, entity);
+        // Esse "findById" é o nome do metodo no controller
+        personVo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        return personVo;
 
     }
 
@@ -64,12 +70,12 @@ public class PersonServices {
         //mostra no console
         logger.info("Atualiza uma Person");
 
-        Person entity = repository.findById(person.id()).orElseThrow();
+        Person entity = repository.findById(person.getId_chave()).orElseThrow();
 
-        entity.setFirstName(person.firstName());
-        entity.setLastName(person.lastName());
-        entity.setAddress(person.address());
-        entity.setGender(person.gender());
+        entity.setFirstName(person.getFirstName());
+        entity.setLastName(person.getLastName());
+        entity.setAddress(person.getAddress());
+        entity.setGender(person.getGender());
 
         return repository.save(entity);
     }

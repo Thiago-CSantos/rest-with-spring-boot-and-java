@@ -29,7 +29,8 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.OK).body(services.findAll());
     }
 
-    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+    @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
+            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<Person> create(@RequestBody PersonVo person) {
         return ResponseEntity.status(HttpStatus.CREATED).body(services.create(person));
     }
