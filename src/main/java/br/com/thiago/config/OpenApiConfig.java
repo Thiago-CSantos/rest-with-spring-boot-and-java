@@ -18,7 +18,7 @@ public class OpenApiConfig {
                         .description("descrição da API")
                         .termsOfService("https://github.com/Thiago-CSantos?tab=repositories")
                         .license(new License()
-                                .name("Apache 2.0")
+                                .name("https://github.com/Thiago-CSantos?tab=repositories")
                                 .url("https://github.com/Thiago-CSantos?tab=repositories")
                         )
                 );
