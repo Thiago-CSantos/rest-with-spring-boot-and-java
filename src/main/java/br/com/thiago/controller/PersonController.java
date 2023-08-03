@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+//@CrossOrigin
 @RestController
 @RequestMapping("/api/person/v1")
 @Tag(name = "Pessoas", description = "Endpoints para gerenciamento de pessoas") // Annotations do swagger
@@ -27,6 +28,7 @@ public class PersonController {
     private PersonServices services;
     //private PersonServices services = new PersonServices();
 
+    @CrossOrigin(origins = "http://localhost:8080")
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Encontrar uma pessoas - FindById", description = "descrição",
             tags = {"Pessoas"},
@@ -45,6 +47,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.OK).body(services.findById(id));
     }
 
+    @CrossOrigin(origins = {"https://thiago.com.br"} )
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     @Operation(summary = "Encontrar todas as pessoas - FindAll", description = "descrição", parameters = {@Parameter(name = "Teste parametro")},
             tags = {"Pessoa"},
@@ -65,6 +68,7 @@ public class PersonController {
         return ResponseEntity.status(HttpStatus.OK).body(services.findAll());
     }
 
+    @CrossOrigin(origins = {"http://localhost:8080", "https://thiago.com.br"} )
     @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
             consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
     )
