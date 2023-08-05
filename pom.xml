@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <dozer.version>6.5.2</dozer.version>
         <springdoc.version>2.0.2</springdoc.version>
+        <java-jwt.version>3.18.3</java-jwt.version>
     </properties>
     <dependencies>
 
@@ -86,6 +87,10 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.jetbrains</groupId>
@@ -121,6 +126,12 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
