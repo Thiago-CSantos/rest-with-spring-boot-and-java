@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("SELECT u FROM User WHERE u.userName =:userName") // Não é uma QUERY SQL - JPQL lidando com o objeto mapeado
-    User findByUsername(@Param("userName")String userName);
+    @Query("SELECT u FROM User u WHERE u.userName =:userName")
+        // Não é uma QUERY SQL - JPQL lidando com o objeto mapeado
+    User findByUsername(@Param("userName") String userName);
 }

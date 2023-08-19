@@ -1,13 +1,8 @@
 package br.com.thiago.dto.security;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.util.Objects;
 
-public class AccountCredentialsVo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class AccountCredentialsVo {
 
     private String username;
     private String password;
