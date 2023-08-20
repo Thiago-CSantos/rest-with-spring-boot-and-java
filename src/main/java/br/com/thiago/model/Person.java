@@ -29,15 +29,19 @@ public class Person extends RepresentationModel<Person> implements Serializable 
     @Column(nullable = false, length = 11)
     private String gender;
 
+    @Column(nullable = false)
+    private String enabled;
+
     public Person() {
     }
 
-    public Person(Long id, String firstName, String lastName, String address, String gender) {
+    public Person(Long id, String firstName, String lastName, String address, String gender, String enabled) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.gender = gender;
+        this.enabled = enabled;
     }
 
     public Long getId() {
@@ -80,25 +84,24 @@ public class Person extends RepresentationModel<Person> implements Serializable 
         this.gender = gender;
     }
 
+    public String getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(String enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Person person)) return false;
-
-        if (!Objects.equals(id, person.id)) return false;
-        if (!Objects.equals(firstName, person.firstName)) return false;
-        if (!Objects.equals(lastName, person.lastName)) return false;
-        if (!Objects.equals(address, person.address)) return false;
-        return Objects.equals(gender, person.gender);
+        if (!super.equals(o)) return false;
+        return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender()) && Objects.equals(getEnabled(), person.getEnabled());
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
-        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        result = 31 * result + (gender != null ? gender.hashCode() : 0);
-        return result;
+        return Objects.hash(super.hashCode(), getId(), getFirstName(), getLastName(), getAddress(), getGender(), getEnabled());
     }
 }
