@@ -15,12 +15,12 @@ public class PersonVo extends RepresentationModel<PersonVo> {
     private String lastName;
     private String address;
     private String gender;
-    private String enabled;
+    private boolean enabled;
 
     public PersonVo() {
     }
 
-    public PersonVo(Long id_chave, String firstName, String lastName, String address, String gender, String enabled) {
+    public PersonVo(Long id_chave, String firstName, String lastName, String address, String gender, boolean enabled) {
         this.id_chave = id_chave;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -73,11 +73,11 @@ public class PersonVo extends RepresentationModel<PersonVo> {
         this.gender = gender;
     }
 
-    public String getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(String enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 

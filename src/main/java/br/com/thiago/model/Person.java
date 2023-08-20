@@ -30,12 +30,12 @@ public class Person extends RepresentationModel<Person> implements Serializable 
     private String gender;
 
     @Column(nullable = false)
-    private String enabled;
+    private boolean enabled;
 
     public Person() {
     }
 
-    public Person(Long id, String firstName, String lastName, String address, String gender, String enabled) {
+    public Person(Long id, String firstName, String lastName, String address, String gender, boolean enabled) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -84,11 +84,11 @@ public class Person extends RepresentationModel<Person> implements Serializable 
         this.gender = gender;
     }
 
-    public String getEnabled() {
+    public boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(String enabled) {
+    public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
@@ -97,7 +97,7 @@ public class Person extends RepresentationModel<Person> implements Serializable 
         if (this == o) return true;
         if (!(o instanceof Person person)) return false;
         if (!super.equals(o)) return false;
-        return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender()) && Objects.equals(getEnabled(), person.getEnabled());
+        return getEnabled() == person.getEnabled() && Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender());
     }
 
     @Override
