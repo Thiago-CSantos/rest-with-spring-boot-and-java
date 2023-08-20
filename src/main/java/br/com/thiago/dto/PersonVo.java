@@ -2,7 +2,10 @@ package br.com.thiago.dto;
 
 import br.com.thiago.model.Person;
 import com.github.dozermapper.core.Mapping;
+import jakarta.persistence.Column;
 import org.springframework.hateoas.RepresentationModel;
+
+import java.util.Objects;
 
 
 public class PersonVo extends RepresentationModel<PersonVo> {
@@ -12,20 +15,22 @@ public class PersonVo extends RepresentationModel<PersonVo> {
     private String lastName;
     private String address;
     private String gender;
+    private boolean enabled;
 
-    public PersonVo(){
+    public PersonVo() {
     }
 
-    public PersonVo(Long id_chave, String firstName, String lastName, String address, String gender) {
+    public PersonVo(Long id_chave, String firstName, String lastName, String address, String gender, boolean enabled) {
         this.id_chave = id_chave;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.gender = gender;
+        this.enabled = enabled;
     }
 
     public PersonVo(Person person) {
-        this(person.getId(), person.getFirstName(), person.getLastName(), person.getAddress(), person.getGender());
+        this(person.getId(), person.getFirstName(), person.getLastName(), person.getAddress(), person.getGender(), person.getEnabled());
     }
 
     public Long getId_chave() {
@@ -68,27 +73,24 @@ public class PersonVo extends RepresentationModel<PersonVo> {
         this.gender = gender;
     }
 
+    public boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PersonVo personVo)) return false;
         if (!super.equals(o)) return false;
-
-        if (!id_chave.equals(personVo.id_chave)) return false;
-        if (!firstName.equals(personVo.firstName)) return false;
-        if (!lastName.equals(personVo.lastName)) return false;
-        if (!address.equals(personVo.address)) return false;
-        return gender.equals(personVo.gender);
+        return Objects.equals(getId_chave(), personVo.getId_chave()) && Objects.equals(getFirstName(), personVo.getFirstName()) && Objects.equals(getLastName(), personVo.getLastName()) && Objects.equals(getAddress(), personVo.getAddress()) && Objects.equals(getGender(), personVo.getGender()) && Objects.equals(getEnabled(), personVo.getEnabled());
     }
 
     @Override
     public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + id_chave.hashCode();
-        result = 31 * result + firstName.hashCode();
-        result = 31 * result + lastName.hashCode();
-        result = 31 * result + address.hashCode();
-        result = 31 * result + gender.hashCode();
-        return result;
+        return Objects.hash(super.hashCode(), getId_chave(), getFirstName(), getLastName(), getAddress(), getGender(), getEnabled());
     }
 }

@@ -4,6 +4,7 @@ import br.com.thiago.controller.PersonController;
 import br.com.thiago.dto.PersonVo;
 import br.com.thiago.model.Person;
 import br.com.thiago.repository.PersonRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,22 @@ public class PersonServices {
         return personVo;
 
     }
+    @Transactional
+    public PersonVo disablePerson(Long id) {
+        //mostra no console
+        logger.info("Desabilitando uma pessoa");
+        repository.disablePerson(id);
+
+        Person entity = repository.findById(id).orElseThrow(()-> new RuntimeException("DESABILITADO"));
+
+        PersonVo personVo = new PersonVo(entity);
+
+        BeanUtils.copyProperties(personVo, entity);
+        // Esse "findById" é o nome do metodo no controller
+        personVo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        return personVo;
+
+    }
 
     public List<PersonVo> findAll() {
         //mostra no console
@@ -47,7 +64,9 @@ public class PersonServices {
                 p.getFirstName(),
                 p.getLastName(),
                 p.getAddress(),
-                p.getGender())
+                p.getGender(),
+                p.getEnabled()
+                )
         ).toList();
         // ou List<PersonVo> personVoList = repository.findAll().stream().map(PersonVo::new).toList();
 
