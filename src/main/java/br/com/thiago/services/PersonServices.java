@@ -2,11 +2,14 @@ package br.com.thiago.services;
 
 import br.com.thiago.controller.PersonController;
 import br.com.thiago.dto.PersonVo;
+import br.com.thiago.mapper.DozerMapper;
 import br.com.thiago.model.Person;
 import br.com.thiago.repository.PersonRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -39,13 +42,14 @@ public class PersonServices {
         return personVo;
 
     }
+
     @Transactional
     public PersonVo disablePerson(Long id) {
         //mostra no console
         logger.info("Desabilitando uma pessoa");
         repository.disablePerson(id);
 
-        Person entity = repository.findById(id).orElseThrow(()-> new RuntimeException("DESABILITADO"));
+        Person entity = repository.findById(id).orElseThrow(() -> new RuntimeException("DESABILITADO"));
 
         PersonVo personVo = new PersonVo(entity);
 
@@ -57,12 +61,12 @@ public class PersonServices {
     }
 
     @Transactional
-    public PersonVo enablePerson(Long id){
+    public PersonVo enablePerson(Long id) {
         //mostra no console
         logger.info("Habilitar uma pessoa");
         repository.enabledPerson(id);
 
-        Person entity = repository.findById(id).orElseThrow(()-> new RuntimeException("HABILITADO"));
+        Person entity = repository.findById(id).orElseThrow(() -> new RuntimeException("HABILITADO"));
 
         PersonVo personVo = new PersonVo(entity);
 
@@ -72,25 +76,28 @@ public class PersonServices {
         return personVo;
     }
 
-    public List<PersonVo> findAll() {
+    public Page<Person> findAll(Pageable pageable) {
         //mostra no console
         logger.info("Buscando uma pessoa - findAll");
-        List<PersonVo> personVoList = repository.findAll().stream().map((Person p) -> new PersonVo(
-                p.getId(),
-                p.getFirstName(),
-                p.getLastName(),
-                p.getAddress(),
-                p.getGender(),
-                p.getEnabled()
+
+        var personPage = repository.findAll(pageable);
+
+        //var personVosPage = personPage.map(p -> DozerMapper.parseObject(p, PersonVo.class));
+
+        List<PersonVo> personVoList = repository.findAll(pageable).stream().map((p) -> new PersonVo(
+                        p.getId(),
+                        p.getFirstName(),
+                        p.getLastName(),
+                        p.getAddress(),
+                        p.getGender(),
+                        p.getEnabled()
                 )
         ).toList();
         // ou List<PersonVo> personVoList = repository.findAll().stream().map(PersonVo::new).toList();
 
-        for (PersonVo p : personVoList) {
-            p.add(linkTo(methodOn(PersonController.class).findById(p.getId_chave())).withSelfRel());
-        }
+        personPage.map(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getId())).withSelfRel()));
 
-        return personVoList;
+        return personPage;
     }
 
     public Person create(PersonVo personVo) {
