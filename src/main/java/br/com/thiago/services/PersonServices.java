@@ -56,6 +56,22 @@ public class PersonServices {
 
     }
 
+    @Transactional
+    public PersonVo enablePerson(Long id){
+        //mostra no console
+        logger.info("Habilitar uma pessoa");
+        repository.enabledPerson(id);
+
+        Person entity = repository.findById(id).orElseThrow(()-> new RuntimeException("HABILITADO"));
+
+        PersonVo personVo = new PersonVo(entity);
+
+        BeanUtils.copyProperties(personVo, entity);
+        // Esse "findById" é o nome do metodo no controller
+        personVo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        return personVo;
+    }
+
     public List<PersonVo> findAll() {
         //mostra no console
         logger.info("Buscando uma pessoa - findAll");
