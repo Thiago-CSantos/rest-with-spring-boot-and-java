@@ -6,10 +6,15 @@ import br.com.thiago.mapper.DozerMapper;
 import br.com.thiago.model.Person;
 import br.com.thiago.repository.PersonRepository;
 import jakarta.transaction.Transactional;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +29,8 @@ public class PersonServices {
     @Autowired
     private PersonRepository repository;
 
+    @Autowired
+    private PagedResourcesAssembler<Person> assembler;
 
     // mostrar no console
     private Logger logger = Logger.getLogger(PersonServices.class.getName());
@@ -76,7 +83,7 @@ public class PersonServices {
         return personVo;
     }
 
-    public Page<Person> findAll(Pageable pageable) {
+    public PagedModel<EntityModel<Person>> findAll(Pageable pageable) {
         //mostra no console
         logger.info("Buscando uma pessoa - findAll");
 
@@ -97,7 +104,9 @@ public class PersonServices {
 
         personPage.map(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getId())).withSelfRel()));
 
-        return personPage;
+        Link link = linkTo(methodOn(PersonController.class).people(pageable.getPageNumber(),pageable.getPageSize(),"asc")).withSelfRel();
+
+        return assembler.toModel(personPage,link);
     }
 
     public Person create(PersonVo personVo) {
