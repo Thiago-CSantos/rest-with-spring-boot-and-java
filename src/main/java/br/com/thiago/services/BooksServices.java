@@ -8,6 +8,11 @@ import br.com.thiago.model.Person;
 import br.com.thiago.repository.BooksRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,9 +27,12 @@ public class BooksServices {
     @Autowired
     private BooksRepository repository;
 
+    @Autowired
+    private PagedResourcesAssembler<Books> assembler;
+
     private Logger logger = Logger.getLogger(BooksServices.class.getName());
 
-    public List<BooksVo> findAll() {
+    public PagedModel<EntityModel<Books>> findAll(Pageable pageable) {
         logger.info("Chmando o metodo findAll");
         List<BooksVo> booksVoList = repository.findAll().stream().map(BooksVo::new).toList();
 
@@ -32,7 +40,12 @@ public class BooksServices {
             b.add(linkTo(methodOn(BooksController.class).findById(b.getId_chave())).withSelfRel());
         }
 
-        return booksVoList;
+        var booksPage = repository.findAll(pageable);
+
+        booksPage.map(p->p.add(linkTo(methodOn(BooksController.class).findById(p.getId())).withSelfRel()));
+
+        Link links = linkTo(methodOn(BooksController.class).getAll(pageable.getPageNumber(), pageable.getPageSize(),"asc")).withSelfRel();
+        return assembler.toModel(booksPage,links);
     }
 
     public BooksVo findById(Long id) {

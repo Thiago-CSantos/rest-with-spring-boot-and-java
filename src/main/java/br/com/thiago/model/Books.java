@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "books")
-public class Books implements Serializable {
+public class Books extends RepresentationModel<Books> implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
