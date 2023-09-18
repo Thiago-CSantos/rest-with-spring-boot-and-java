@@ -2,14 +2,11 @@ package br.com.thiago.services;
 
 import br.com.thiago.controller.PersonController;
 import br.com.thiago.dto.PersonVo;
-import br.com.thiago.mapper.DozerMapper;
 import br.com.thiago.model.Person;
 import br.com.thiago.repository.PersonRepository;
 import jakarta.transaction.Transactional;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -104,9 +101,9 @@ public class PersonServices {
 
         personPage.map(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getId())).withSelfRel()));
 
-        Link link = linkTo(methodOn(PersonController.class).people(pageable.getPageNumber(),pageable.getPageSize(),"asc")).withSelfRel();
+        Link link = linkTo(methodOn(PersonController.class).people(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
 
-        return assembler.toModel(personPage,link);
+        return assembler.toModel(personPage, link);
     }
 
     public Person create(PersonVo personVo) {
@@ -142,4 +139,18 @@ public class PersonServices {
         repository.delete(entity);
     }
 
+
+    public PagedModel<EntityModel<Person>> findPersonsByNames(String firstname, Pageable pageable) {
+        //mostra no console
+        logger.info("Buscando uma pessoa - findPersonsByNames");
+
+        var personPage = repository.findPersonsByNames(firstname, pageable);
+
+        personPage.map(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getId())).withSelfRel()));
+
+        Link link = linkTo(methodOn(PersonController.class)
+                .people(pageable.getPageNumber(), pageable.getPageSize(), "asc")).withSelfRel();
+
+        return assembler.toModel(personPage, link);
+    }
 }
