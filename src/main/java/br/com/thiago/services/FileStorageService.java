@@ -3,6 +3,8 @@ package br.com.thiago.services;
 import br.com.thiago.config.FileStorageConfig;
 import br.com.thiago.exceptions.FileStorageException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +47,23 @@ public class FileStorageService {
             return filename ;
         } catch (Exception e) {
             throw new FileStorageException("Não foi possivel aarmazenar o arquivo: " + filename + " tente novamente.", e);
+        }
+    }
+
+    public Resource loadFileAsResource(String filename) throws Exception {
+        try{
+            Path filePath = this.fileStorageLocation.resolve(filename).normalize(); // normalize() para scape no espaços
+
+            Resource resource = new UrlResource(filePath.toUri());
+
+            if(resource.exists()){
+                return resource;
+            }else {
+                throw  new Exception("Arquivo não encontrado");
+            }
+        }
+        catch(Exception e){
+            throw  e;
         }
     }
 }
